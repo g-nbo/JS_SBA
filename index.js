@@ -91,9 +91,9 @@ function getLearnerData(course, ag, submissions) {
 
     // maybe add try/catch?
     function checkCourseID() {
-        if(course.id !== ag.course_id) {
+        if (course.id !== ag.course_id) {
             throw new Error("ERROR: This AssignmentGroup does not belong to this course!")
-            
+
         }
     }
     try {
@@ -101,7 +101,7 @@ function getLearnerData(course, ag, submissions) {
     } catch (e) {
         console.error(e);
     }
-    
+
 
 
     // Grab all unique learner ID's as objects and store them into an array
@@ -148,26 +148,30 @@ function getLearnerData(course, ag, submissions) {
                 if (element2.learner_id === element1.id) {
 
                     // turn these into functions?
-                    
+
                     let key = element2.assignment_id;
                     let score = element2.submission.score;
                     let pointsPossible = ag.assignments[element2.assignment_id - 1].points_possible;
 
+                    // What to do if points possible is zero
+                    if (pointsPossible === 0) {
+                        score = 1;
+                        pointsPossible = 1;
+                    }
+
                     // date variables
                     let dueAtDate = Date.parse(ag.assignments[element2.assignment_id - 1].due_at);
                     let dateRightNow = Date.parse(Date(Date.now));
-                    let submittedAt = Date.parse(element2.submission.submitted_at)
+                    let submittedAt = Date.parse(element2.submission.submitted_at);
 
                     // if submitted at date is greater than the due date than deduct 10% points
                     if (submittedAt > dueAtDate) {
                         let deduction = pointsPossible * 0.1;
                         score = score - deduction;
-                        
+
                     }
 
                     let grade = score / pointsPossible;
-
-                    // let averageGrade = (score1 + score2 ...etc) / (pointsPossible1 + pointsPossible2 ...etc)
 
                     element1[key] = grade;
 
@@ -196,11 +200,6 @@ function getLearnerData(course, ag, submissions) {
 
     }
 
-
-
-
-
-    // Remember to get rid of these extra arguments with data you can just grab globally, it will look nicer
     // Remember to give your functions variables names so they look nicer when you call them inside of eachother
     checkCourseID();
     return getAssignmentId(getLearnerId());
