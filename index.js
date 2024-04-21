@@ -87,6 +87,23 @@ const LearnerSubmissions = [
 
 function getLearnerData(course, ag, submissions) {
     // here, we would process this data to achieve the desired result.
+
+
+    // maybe add try/catch?
+    function checkCourseID() {
+        if(course.id !== ag.course_id) {
+            throw new Error("ERROR: This AssignmentGroup does not belong to this course!")
+            
+        }
+    }
+    try {
+        console.log('Course ID:', course.id, "\nAssignment's Group Course ID:", ag.course_id);
+    } catch (e) {
+        console.error(e);
+    }
+    
+
+
     // Grab all unique learner ID's as objects and store them into an array
     function getLearnerId() {
         let newSubmissions = [];
@@ -126,46 +143,53 @@ function getLearnerData(course, ag, submissions) {
 
             let totalScore = 0;
             let totalPointsPossible = 0;
-            submissions.filter((element2, i) => {
+            submissions.filter((element2) => {
 
                 if (element2.learner_id === element1.id) {
 
                     // turn these into functions?
-
+                    
                     let key = element2.assignment_id;
                     let score = element2.submission.score;
                     let pointsPossible = ag.assignments[element2.assignment_id - 1].points_possible;
-                    let grade = score / pointsPossible
 
+                    // date variables
+                    let dueAtDate = Date.parse(ag.assignments[element2.assignment_id - 1].due_at);
+                    let dateRightNow = Date.parse(Date(Date.now));
+                    let submittedAt = Date.parse(element2.submission.submitted_at)
 
+                    // if submitted at date is greater than the due date than deduct 10% points
+                    if (submittedAt > dueAtDate) {
+                        let deduction = pointsPossible * 0.1;
+                        score = score - deduction;
+                        
+                    }
+
+                    let grade = score / pointsPossible;
 
                     // let averageGrade = (score1 + score2 ...etc) / (pointsPossible1 + pointsPossible2 ...etc)
 
                     element1[key] = grade;
+
+                    // check if due at date is greater than today, if true then delete it.
+                    if (dueAtDate > dateRightNow) {
+                        score = 0;
+                        pointsPossible = 0;
+                        delete element1[key]
+                    }
+
+                    //Create a get average grade function here
                     element1['avg'] = 0;
 
                     totalScore += score;
                     totalPointsPossible += pointsPossible;
                 }
 
-
-
-                
-                return;
+                return arr1;
             })
-            element1.avg = totalScore/totalPointsPossible;
-            
-            //element1[element3.id] will give you values/scores
-            // ag.assignments.filter((element3, i) => {
-            //     console.log(element1[i + 1])
-            //     if (element1[i] === element3.id) {
-
-            //         console.log(element1[element3.id] + element1[element3.id -1])
-            //     }
-            // })
+            element1.avg = totalScore / totalPointsPossible;
 
         })
-
 
 
         return arr1;
@@ -178,9 +202,8 @@ function getLearnerData(course, ag, submissions) {
 
     // Remember to get rid of these extra arguments with data you can just grab globally, it will look nicer
     // Remember to give your functions variables names so they look nicer when you call them inside of eachother
-
-    console.log(getAssignmentId(getLearnerId()))
-    return 'return';
+    checkCourseID();
+    return getAssignmentId(getLearnerId());
 
 
     const result = [
