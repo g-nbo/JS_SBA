@@ -87,34 +87,29 @@ const LearnerSubmissions = [
 
 function getLearnerData(course, ag, submissions) {
     // here, we would process this data to achieve the desired result.
-    // WRITE PSEUDOCODE
-
-    
-
-
-    function getLearnerID() {
+    // Grab all unique learner ID's as objects and store them into an array
+    function getLearnerId() {
         let newSubmissions = [];
         let arrOfObjects = []
 
-        // loop over the our submissions array
+        // loop over the our submissions
         submissions.forEach((element) => {
 
             // filter out only the learner_id key value pairs from each object
             newSubmissions = Object.keys(element).filter(key => key === 'learner_id').reduce((newObj, key) => {
 
                 newObj[key] = element[key];
+                // push each object into new array arrOfObjects for later use
                 arrOfObjects.push(newObj);
-                // filter out only unique objects by learner_id
-                // let filteredArray = arrOfObjects.filter((element, index) => arrOfObjects
-                //     .findIndex(item => item.learner_id === element.learner_id) === index);
 
+                // filter out only unique learner_id objects
+                let filteredArray = arrOfObjects.filter((element, index) => arrOfObjects
+                    .findIndex(item => item.learner_id === element.learner_id) === index);
 
-
-                return arrOfObjects;
+                return filteredArray;
             }, {})
-            
+
             return newSubmissions;
-            
         })
         // rename from learner_id to just id
         newSubmissions.map((element) => {
@@ -123,7 +118,35 @@ function getLearnerData(course, ag, submissions) {
         })
         return newSubmissions;
     }
-    return getLearnerID();
+
+    function getAssignmentId(arr1, arr2) {
+        
+        // We know if we .map element.assignment_id our array we will get all of the assignment id's, the question is how do we seperate them  based on student id?
+
+        // This filters the array for only objects that have this learner id
+        let testing = arr2.forEach((element1) => {
+            console.log(arr1.filter((element2, i) => {
+                if(element2.learner_id === element1.id) {
+                    let key = element2.assignment_id;
+                    element1[key] = 0;
+                    
+
+                }
+                
+                
+                return element2.learner_id === element1.id
+            })
+        )
+        console.log(element1)
+        })
+        
+
+
+        return testing;
+        
+    }
+
+    return getAssignmentId(submissions, getLearnerId());
 
 
     const result = [
