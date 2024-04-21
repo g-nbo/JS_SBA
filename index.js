@@ -119,34 +119,38 @@ function getLearnerData(course, ag, submissions) {
         return newSubmissions;
     }
 
-    function getAssignmentId(arr1, arr2) {
-        
+    function getAssignmentId(arr1, arr2, ag) {
+
         // We know if we .map element.assignment_id our array we will get all of the assignment id's, the question is how do we seperate them  based on student id?
 
         // This filters the array for only objects that have this learner id
-        let testing = arr2.forEach((element1) => {
-            console.log(arr1.filter((element2, i) => {
-                if(element2.learner_id === element1.id) {
+        let assignmentIds = arr2.forEach((element1) => {
+            arr1.filter((element2) => {
+                if (element2.learner_id === element1.id) {
+
                     let key = element2.assignment_id;
-                    element1[key] = 0;
+                    let score = element2.submission.score;
+                    let pointsPossible = ag.assignments[element2.assignment_id - 1].points_possible;
+                    let grade = score / pointsPossible
+                     // divide this by assignment group id to get value;
+                    element1[key] = grade;
                     
-
+                    
                 }
-                
-                
-                return element2.learner_id === element1.id
+                return;
             })
-        )
-        console.log(element1)
+
+
+
         })
-        
 
 
-        return testing;
-        
+        return arr2;
+
     }
+    // console.log(getAssignmentId(submissions, getLearnerId()))
 
-    return getAssignmentId(submissions, getLearnerId());
+    return getAssignmentId(submissions, getLearnerId(), ag);
 
 
     const result = [
