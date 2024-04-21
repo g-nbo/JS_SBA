@@ -92,7 +92,7 @@ function getLearnerData(course, ag, submissions) {
         let newSubmissions = [];
         let arrOfObjects = []
 
-        // loop over the our submissions
+        // loop over the submissions
         submissions.forEach((element) => {
 
             // filter out only the learner_id key value pairs from each object
@@ -119,38 +119,68 @@ function getLearnerData(course, ag, submissions) {
         return newSubmissions;
     }
 
-    function getAssignmentId(arr1, arr2, ag) {
+    function getAssignmentId(arr1) {
 
-        // We know if we .map element.assignment_id our array we will get all of the assignment id's, the question is how do we seperate them  based on student id?
 
-        // This filters the array for only objects that have this learner id
-        let assignmentIds = arr2.forEach((element1) => {
-            arr1.filter((element2) => {
+        let assignmentIds = arr1.forEach((element1) => {
+
+            let totalScore = 0;
+            let totalPointsPossible = 0;
+            submissions.filter((element2, i) => {
+
                 if (element2.learner_id === element1.id) {
+
+                    // turn these into functions?
 
                     let key = element2.assignment_id;
                     let score = element2.submission.score;
                     let pointsPossible = ag.assignments[element2.assignment_id - 1].points_possible;
                     let grade = score / pointsPossible
-                     // divide this by assignment group id to get value;
+
+
+
+                    // let averageGrade = (score1 + score2 ...etc) / (pointsPossible1 + pointsPossible2 ...etc)
+
                     element1[key] = grade;
-                    
-                    
+                    element1['avg'] = 0;
+
+                    totalScore += score;
+                    totalPointsPossible += pointsPossible;
                 }
+
+
+
+                
                 return;
             })
+            element1.avg = totalScore/totalPointsPossible;
+            
+            //element1[element3.id] will give you values/scores
+            // ag.assignments.filter((element3, i) => {
+            //     console.log(element1[i + 1])
+            //     if (element1[i] === element3.id) {
 
-
+            //         console.log(element1[element3.id] + element1[element3.id -1])
+            //     }
+            // })
 
         })
 
 
-        return arr2;
+
+        return arr1;
 
     }
-    // console.log(getAssignmentId(submissions, getLearnerId()))
 
-    return getAssignmentId(submissions, getLearnerId(), ag);
+
+
+
+
+    // Remember to get rid of these extra arguments with data you can just grab globally, it will look nicer
+    // Remember to give your functions variables names so they look nicer when you call them inside of eachother
+
+    console.log(getAssignmentId(getLearnerId()))
+    return 'return';
 
 
     const result = [
