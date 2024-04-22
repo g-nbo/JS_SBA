@@ -89,7 +89,7 @@ function getLearnerData(course, ag, submissions) {
     // here, we would process this data to achieve the desired result.
 
 
-    // maybe add try/catch?
+    // Check if course ID matches to assignment group's course ID
     function checkCourseID() {
         if (course.id !== ag.course_id) {
             throw new Error("ERROR: This AssignmentGroup does not belong to this course!")
@@ -138,8 +138,7 @@ function getLearnerData(course, ag, submissions) {
 
     function getAssignmentId(arr1) {
 
-        // Remember to see if assignmentIds variable should be removed
-        let assignmentIds = arr1.forEach((element1) => {
+        arr1.forEach((element1) => {
 
             let totalScore = 0;
             let totalPointsPossible = 0;
@@ -147,8 +146,7 @@ function getLearnerData(course, ag, submissions) {
 
                 if (element2.learner_id === element1.id) {
 
-                    // turn these into functions?
-
+                    // Key, Score, & possible points variables
                     let key = element2.assignment_id;
                     let score = element2.submission.score;
                     let pointsPossible = ag.assignments[element2.assignment_id - 1].points_possible;
@@ -170,9 +168,10 @@ function getLearnerData(course, ag, submissions) {
                         score = score - deduction;
 
                     }
-
+                    // grade = score divided by pointsPossible
                     let grade = score / pointsPossible;
 
+                    // create
                     element1[key] = Math.round(grade * 1000) / 1000;
 
                     // check if due at date is greater than today, if true then delete it.
@@ -182,7 +181,7 @@ function getLearnerData(course, ag, submissions) {
                         delete element1[key]
                     }
 
-                    //Remember to Create a get average grade function here
+                    // 
                     element1['avg'] = 0;
 
                     totalScore += score;
@@ -208,13 +207,9 @@ function getLearnerData(course, ag, submissions) {
 
     }
 
-    // Remember to give your functions variables names so they look nicer when you call them inside of eachother
     const learnerIDs = getLearnerId();
     const assignmentIDs = getAssignmentId(learnerIDs);
 
-
-
-    // Remember to add a README file
     checkCourseID();
     console.log(assignmentIDs);
 
