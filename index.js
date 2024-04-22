@@ -74,14 +74,14 @@ const LearnerSubmissions = [
             score: 140
         }
     },
-    {
-        learner_id: 145,
-        assignment_id: 2,
-        submission: {
-            submitted_at: "2023-03-07",
-            score: 140
-        }
-    }
+    // {
+    //     learner_id: 145,
+    //     assignment_id: 2,
+    //     submission: {
+    //         submitted_at: "2023-03-07",
+    //         score: 140
+    //     }
+    // }
 
 ];
 
@@ -97,7 +97,7 @@ function getLearnerData(course, ag, submissions) {
         }
     }
     try {
-        console.log('Course ID:', course.id, "\nAssignment's Group Course ID:", ag.course_id);
+        console.log('Course ID:', course.id, "\nAssignment Group's Course ID:", ag.course_id);
     } catch (e) {
         console.error(e);
     }
@@ -107,7 +107,7 @@ function getLearnerData(course, ag, submissions) {
     // Grab all unique learner ID's as objects and store them into an array
     function getLearnerId() {
         let newSubmissions = [];
-        let arrOfObjects = []
+        let arrOfObjects = [];
 
         // loop over the submissions
         submissions.forEach((element) => {
@@ -138,7 +138,7 @@ function getLearnerData(course, ag, submissions) {
 
     function getAssignmentId(arr1) {
 
-
+        // Remember to see if assignmentIds variable should be removed
         let assignmentIds = arr1.forEach((element1) => {
 
             let totalScore = 0;
@@ -173,7 +173,7 @@ function getLearnerData(course, ag, submissions) {
 
                     let grade = score / pointsPossible;
 
-                    element1[key] = grade;
+                    element1[key] = Math.round(grade * 1000) / 1000;
 
                     // check if due at date is greater than today, if true then delete it.
                     if (dueAtDate > dateRightNow) {
@@ -182,7 +182,7 @@ function getLearnerData(course, ag, submissions) {
                         delete element1[key]
                     }
 
-                    //Create a get average grade function here
+                    //Remember to Create a get average grade function here
                     element1['avg'] = 0;
 
                     totalScore += score;
@@ -195,14 +195,28 @@ function getLearnerData(course, ag, submissions) {
 
         })
 
+        // Utilize at least one loop control keyword such as break or continue.
+        for (i = 0; i < 2; i++) {
+            if (i === 0) {
+                continue;
+            } else {
+                break;
+            }
+        }
 
         return arr1;
 
     }
 
     // Remember to give your functions variables names so they look nicer when you call them inside of eachother
+    const learnerIDs = getLearnerId();
+    const assignmentIDs = getAssignmentId(learnerIDs);
+
+
+
+    // Remember to add a README file
     checkCourseID();
-    return getAssignmentId(getLearnerId());
+    console.log(assignmentIDs);
 
 
     const result = [
